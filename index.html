@@ -12,6 +12,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+/* ━━ DESIGN TOKENS — extracted from MetaAdsFlow dashboard ━━ */
 :root {
   --blue:       #1A56DB;
   --blue-dark:  #1648c0;
@@ -32,11 +33,218 @@
 
 html,body{height:100%;font-family:var(--font);-webkit-font-smoothing:antialiased;overflow:hidden}
 
-/* ... (all existing styles remain exactly same) ... */
-/* For brevity, I include only the new additions and keep all old styles. 
-   In the actual delivered code, I will preserve all original CSS. */
+/* ━━ ANIMATED BACKGROUND — matches dashboard vibe ━━ */
+.bg-scene {
+  position:fixed;inset:0;z-index:0;
+  background: linear-gradient(145deg, #f8fafc 0%, #eef2ff 50%, #f0fdf4 100%);
+  overflow:hidden;
+}
+.blob {
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:0.45;
+  animation: blob-drift 18s ease-in-out infinite;
+}
+.blob-1{width:520px;height:520px;background:rgba(26,86,219,0.18);top:-120px;left:-80px;animation-delay:0s}
+.blob-2{width:440px;height:440px;background:rgba(5,163,108,0.15);bottom:-100px;right:-60px;animation-delay:-7s}
+.blob-3{width:380px;height:380px;background:rgba(99,102,241,0.12);top:40%;left:50%;animation-delay:-13s}
 
-/* New: Bottom status bar */
+@keyframes blob-drift{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(30px,-20px) scale(1.06)}
+  66%{transform:translate(-20px,30px) scale(0.96)}
+}
+
+/* ━━ GLASS CARD ━━ */
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter:blur(20px) saturate(1.8);
+  -webkit-backdrop-filter:blur(20px) saturate(1.8);
+  border:1px solid var(--glass-bdr);
+  border-radius:var(--radius);
+  box-shadow:var(--glass-shd);
+}
+.glass-strong{
+  background:var(--glass-bg2);
+  backdrop-filter:blur(24px) saturate(2);
+  -webkit-backdrop-filter:blur(24px) saturate(2);
+  border:1px solid rgba(255,255,255,0.55);
+  border-radius:var(--radius);
+  box-shadow:var(--glass-shd);
+}
+.glass:hover,.glass-strong:hover{box-shadow:var(--glass-shd2)}
+
+/* ━━ SCROLLBAR ━━ */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(26,86,219,0.2);border-radius:4px}
+
+/* ━━ BUTTONS — gradient, matching dashboard "API Setup" ━━ */
+.btn-grad{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 22px;border:none;border-radius:50px;cursor:pointer;
+  font:600 14px var(--font);color:#fff;
+  background:var(--grad);
+  box-shadow:0 4px 16px rgba(26,86,219,0.30);
+  transition:all .18s ease;
+}
+.btn-grad:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,86,219,0.40)}
+.btn-grad:active{transform:translateY(0)}
+
+.btn-glass{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:10px 22px;border:1px solid rgba(26,86,219,0.25);border-radius:50px;cursor:pointer;
+  font:600 14px var(--font);color:var(--blue);
+  background:rgba(26,86,219,0.06);
+  transition:all .18s ease;
+}
+.btn-glass:hover{background:rgba(26,86,219,0.12);transform:translateY(-1px)}
+
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.5);color:var(--text-2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;
+  transition:all .15s;
+}
+.icon-btn:hover{background:rgba(26,86,219,0.1);color:var(--blue);border-color:rgba(26,86,219,0.2);transform:translateY(-1px)}
+
+/* ━━ ANIMATIONS ━━ */
+@keyframes fade-up   {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade-in   {from{opacity:0}to{opacity:1}}
+@keyframes slide-r   {from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slide-l   {from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
+@keyframes msg-pop   {0%{transform:scale(.92);opacity:0}60%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}}
+@keyframes dot-bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+@keyframes online-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes sheet-up  {from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes unread-pop{0%{transform:scale(.5)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+/* ━━ CONTACT ROW ━━ */
+.c-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:16px;cursor:pointer;min-height:68px;
+  transition:background .15s,transform .15s,box-shadow .15s;
+  border:1px solid transparent;
+}
+.c-row:hover{background:rgba(255,255,255,0.6);transform:translateY(-1px);box-shadow:0 4px 16px rgba(26,86,219,0.08);border-color:rgba(255,255,255,0.6)}
+.c-row.active{background:rgba(26,86,219,0.08);border-color:rgba(26,86,219,0.18)}
+.c-row.active .c-name{color:var(--blue);font-weight:700}
+
+/* ━━ AVATAR ━━ */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;position:relative}
+.av-dot{position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid white;animation:online-pulse 2.5s infinite}
+
+/* ━━ BADGE ━━ */
+.badge{min-width:20px;height:20px;border-radius:10px;padding:0 5px;background:var(--blue);color:#fff;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center;animation:unread-pop .3s ease}
+
+/* ━━ SEARCH ━━ */
+.search-wrap{position:relative}
+.search-inp{
+  width:100%;padding:10px 14px 10px 38px;
+  border:1px solid rgba(255,255,255,0.5);border-radius:14px;
+  font:14px var(--font);color:var(--text);
+  background:rgba(255,255,255,0.55);
+  backdrop-filter:blur(8px);outline:none;
+  transition:border-color .15s,box-shadow .15s,background .15s;
+}
+.search-inp:focus{background:rgba(255,255,255,0.75);border-color:rgba(26,86,219,0.35);box-shadow:0 0 0 3px rgba(26,86,219,0.1)}
+.search-inp::placeholder{color:var(--text-3)}
+.si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-3);font-size:12px}
+
+/* ━━ FILTER TABS ━━ */
+.ftab{padding:6px 14px;border-radius:20px;font:600 12.5px var(--font);cursor:pointer;border:1px solid;white-space:nowrap;transition:all .15s}
+.ftab.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(26,86,219,0.3)}
+.ftab.off{background:rgba(255,255,255,0.5);color:var(--text-2);border-color:rgba(255,255,255,0.5)}
+.ftab.off:hover{background:rgba(26,86,219,0.08);color:var(--blue);border-color:rgba(26,86,219,0.2)}
+
+/* ━━ BUBBLES ━━ */
+.bwrap{display:flex;gap:8px;align-items:flex-end;margin-bottom:6px}
+.bwrap.sent{flex-direction:row-reverse}
+.bubble{max-width:72%;padding:12px 16px;font-size:16px;line-height:1.55;word-break:break-word}
+.bubble.sent{
+  background:var(--grad);color:#fff;
+  border-radius:20px 4px 20px 20px;
+  box-shadow:0 4px 16px rgba(26,86,219,0.25);
+  animation:slide-r .22s ease both,msg-pop .28s ease both;
+}
+.bubble.recv{
+  background:rgba(255,255,255,0.80);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.6);
+  color:var(--text);
+  border-radius:4px 20px 20px 20px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.06);
+  animation:slide-l .22s ease both,msg-pop .28s ease both;
+}
+.b-time{font-size:10.5px;color:var(--text-3);margin-top:4px;display:flex;align-items:center;gap:4px}
+.bwrap.sent .b-time{justify-content:flex-end}
+
+/* ━━ TYPING ━━ */
+.typing{display:inline-flex;align-items:center;gap:4px;padding:12px 16px;border-radius:4px 20px 20px 20px;background:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.6);box-shadow:0 2px 12px rgba(0,0,0,0.06);animation:fade-in .2s ease}
+.td{width:7px;height:7px;border-radius:50%;background:var(--text-3)}
+.td:nth-child(1){animation:dot-bounce 1.2s ease infinite 0s}
+.td:nth-child(2){animation:dot-bounce 1.2s ease infinite .18s}
+.td:nth-child(3){animation:dot-bounce 1.2s ease infinite .36s}
+
+/* ━━ INPUT ━━ */
+.input-wrap{
+  display:flex;align-items:flex-end;gap:8px;
+  padding:14px 16px;border-top:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.5);backdrop-filter:blur(16px);flex-shrink:0;
+}
+.msg-ta{
+  flex:1;resize:none;border:1px solid rgba(255,255,255,0.5);outline:none;
+  border-radius:16px;padding:11px 15px;
+  font:16px/1.5 var(--font);color:var(--text);
+  background:rgba(255,255,255,0.65);backdrop-filter:blur(8px);
+  max-height:120px;transition:border-color .15s,box-shadow .15s;
+}
+.msg-ta:focus{border-color:rgba(26,86,219,0.4);box-shadow:0 0 0 3px rgba(26,86,219,0.08);background:rgba(255,255,255,0.85)}
+.msg-ta::placeholder{color:var(--text-3)}
+.send-btn{
+  width:44px;height:44px;border-radius:14px;border:none;
+  background:var(--grad);color:#fff;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(26,86,219,0.35);
+  transition:transform .15s,box-shadow .15s;
+}
+.send-btn:hover:not(:disabled){transform:scale(1.08) translateY(-1px);box-shadow:0 6px 20px rgba(26,86,219,0.45)}
+.send-btn:disabled{opacity:.45;cursor:default}
+
+/* ━━ CHAT HEADER ━━ */
+.chat-hdr{
+  display:flex;align-items:center;gap:11px;
+  padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.4);backdrop-filter:blur(16px);flex-shrink:0;
+}
+
+/* ━━ STATUS PILL ━━ */
+.spill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px}
+.spill.active{background:rgba(5,163,108,0.12);color:#059669}
+.spill.paused{background:rgba(245,158,11,0.12);color:#d97706}
+.spill.done  {background:rgba(148,163,184,0.12);color:#64748b}
+.sdot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.sdot.active{background:#22c55e;animation:online-pulse 2s infinite}
+.sdot.paused{background:#f59e0b}
+.sdot.done  {background:#94a3b8}
+
+/* ━━ TAG ━━ */
+.tag{display:inline-flex;align-items:center;padding:3px 11px;border-radius:20px;font-size:12px;font-weight:500;background:rgba(26,86,219,0.08);color:var(--blue);border:1px solid rgba(26,86,219,0.15)}
+
+/* ━━ SHEET ━━ */
+.sheet-ov{position:absolute;inset:0;background:rgba(15,23,42,0.2);backdrop-filter:blur(3px);z-index:20;animation:fade-in .18s ease}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);border-radius:24px 24px 0 0;border-top:1px solid rgba(255,255,255,0.6);box-shadow:0 -8px 40px rgba(0,0,0,0.1);animation:sheet-up .26s cubic-bezier(.25,1,.5,1);max-height:80%;overflow-y:auto}
+
+/* ━━ DATE SEP ━━ */
+.dsep{display:flex;align-items:center;gap:12px;margin:10px 0 16px;font-size:11px;color:var(--text-3);font-weight:500}
+.dsep::before,.dsep::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.4)}
+
+/* ━━ NOTE ━━ */
+.note-ta{width:100%;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.5);font:13px/1.5 var(--font);color:var(--text);background:rgba(255,255,255,0.55);resize:vertical;min-height:72px;outline:none;transition:border-color .15s}
+.note-ta:focus{border-color:rgba(26,86,219,0.35);background:rgba(255,255,255,0.8)}
+
+/* ━━ SECTION LABEL ━━ */
+.slabel{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+
+/* ━━ BOTTOM STATUS BAR (new) ━━ */
 .bottom-status-bar {
   display: flex;
   justify-content: space-between;
@@ -74,17 +282,76 @@ html,body{height:100%;font-family:var(--font);-webkit-font-smoothing:antialiased
 <script type="text/babel">
 const {useState,useEffect,useRef}=React;
 
-// ---------- DATA (unchanged) ----------
-const CONTACTS=[...]; // same as original
-const CONVOS={...};   // same
-const REPLIES=[...];  // same
+/* ━━ DATA ━━ */
+const CONTACTS=[
+  {id:1,name:'Priya Sharma',      phone:'+91 98765 43210',init:'PS',color:'#6366f1',last:'Thanks! Will check it out 😊',   time:'2m', unread:3,online:true, agent:'Rahul K.',labels:['VIP','Hot Lead'],lastSeen:'Online',   msgs:148},
+  {id:2,name:'Mohammed Al-Rashid',phone:'+971 50 123 4567',init:'MA',color:'#0891b2',last:'When can we schedule a call?', time:'14m',unread:1,online:true, agent:'Sneha P.',labels:['Enterprise'],  lastSeen:'Online',   msgs:62},
+  {id:3,name:'Ananya Gupta',      phone:'+91 87654 32109',init:'AG',color:'#059669',last:'Order shipped! Track here 📦',  time:'1h', unread:0,online:false,agent:'Rahul K.',labels:['Repeat'],     lastSeen:'1h ago',   msgs:241},
+  {id:4,name:'Ravi Patel',        phone:'+91 77778 88999',init:'RP',color:'#d97706',last:'Got the invoice, thanks.',      time:'3h', unread:0,online:false,agent:'—',       labels:['New'],       lastSeen:'3h ago',   msgs:18},
+  {id:5,name:'Fatima Noor',       phone:'+92 312 345 6789',init:'FN',color:'#db2777',last:'Please send product catalogue',time:'1d', unread:0,online:false,agent:'Sneha P.',labels:['Prospect'],  lastSeen:'Yesterday',msgs:34},
+  {id:6,name:'Arun Mehta',        phone:'+91 99887 76655',init:'AM',color:'#7c3aed',last:'Can we get a bulk discount?',   time:'2d', unread:0,online:false,agent:'—',       labels:['Prospect'],  lastSeen:'2d ago',   msgs:9},
+];
 
-function useChatState(){...} // same
+const CONVOS={
+  1:[
+    {id:1,type:'recv',text:'Hi! I saw your campaign for the new WhatsApp Business API features.',time:'10:02 AM'},
+    {id:2,type:'sent',text:'Hey Priya! Yes, we just launched it 🎉 Are you interested in upgrading your plan?',time:'10:03 AM'},
+    {id:3,type:'recv',text:'Definitely! What does the Enterprise plan include?',time:'10:04 AM'},
+    {id:4,type:'sent',text:'Great choice! The Enterprise plan includes:\n• Unlimited template messages\n• Dedicated support\n• API rate limit: 1000 msg/min\n• Advanced analytics dashboard',time:'10:05 AM'},
+    {id:5,type:'recv',text:'That sounds perfect. What\'s the pricing?',time:'10:06 AM'},
+    {id:6,type:'sent',text:'Starting at ₹15,000/month. I can send you the detailed brochure right now!',time:'10:07 AM'},
+    {id:7,type:'recv',text:'Thanks! Will check it out 😊',time:'10:08 AM'},
+  ],
+  2:[
+    {id:1,type:'recv',text:'Hello, I represent a logistics company looking for WhatsApp automation.',time:'9:30 AM'},
+    {id:2,type:'sent',text:'Welcome! We specialize in exactly that. How many messages do you send monthly?',time:'9:32 AM'},
+    {id:3,type:'recv',text:'Around 500K messages per month across 3 countries.',time:'9:35 AM'},
+    {id:4,type:'sent',text:'Perfect fit for our Enterprise tier. I can arrange a live demo.',time:'9:36 AM'},
+    {id:5,type:'recv',text:'When can we schedule a call?',time:'9:45 AM'},
+  ],
+  3:[{id:1,type:'sent',text:'Hi Ananya! Your order #45892 has been shipped via Blue Dart.',time:'Yesterday'},{id:2,type:'recv',text:'Oh great! What\'s the tracking number?',time:'Yesterday'},{id:3,type:'sent',text:'Tracking: BD789456123. Expected delivery: April 22.',time:'Yesterday'},{id:4,type:'recv',text:'Order shipped! Track here 📦',time:'Yesterday'}],
+  4:[{id:1,type:'sent',text:'Hello Ravi, please find your invoice #INV-2024-892 attached.',time:'3h ago'},{id:2,type:'recv',text:'Got the invoice, thanks.',time:'3h ago'}],
+  5:[{id:1,type:'recv',text:'Hello, can you please send me your product catalogue?',time:'Yesterday'},{id:2,type:'sent',text:'Of course! Sending it right away.',time:'Yesterday'},{id:3,type:'recv',text:'Please send product catalogue',time:'Yesterday'}],
+  6:[{id:1,type:'recv',text:'Hi, can we get a bulk discount on the API plan?',time:'2d ago'},{id:2,type:'sent',text:'Yes! For volumes above 100K/month we have special rates.',time:'2d ago'}],
+};
 
-function Av({init,color,size=44,online=false}){...} // same
-function Typing(){...} // same
+const REPLIES=['Got it! Let me check that for you.','Sure, I\'ll look into this right away 👍','Thanks for reaching out! Our specialist will follow up shortly.','That\'s great to hear! Anything else I can help with?','I\'ll escalate this to our team immediately.'];
 
-// -------- ContactList with badge (missing element added) --------
+function useChatState(){
+  const [convos,setConvos]=useState(CONVOS);
+  const [typing,setTyping]=useState({});
+  function send(cid,text){
+    const t=new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    setConvos(c=>({...c,[cid]:[...(c[cid]||[]),{id:Date.now(),type:'sent',text,time:t}]}));
+    setTyping(p=>({...p,[cid]:true}));
+    setTimeout(()=>{
+      setConvos(c=>({...c,[cid]:[...(c[cid]||[]),{id:Date.now()+1,type:'recv',text:REPLIES[Math.floor(Math.random()*REPLIES.length)],time:t}]}));
+      setTyping(p=>({...p,[cid]:false}));
+    },1600+Math.random()*1000);
+  }
+  return{convos,typing,send};
+}
+
+/* ━━ COMPONENTS ━━ */
+function Av({init,color,size=44,online=false}){
+  return(
+    <div className="av" style={{width:size,height:size,background:color,fontSize:size>36?14:12,flexShrink:0}}>
+      {init}
+      {online&&<span className="av-dot" style={size<40?{width:9,height:9}:{}}/>}
+    </div>
+  );
+}
+
+function Typing(){
+  return(
+    <div className="bwrap recv">
+      <div className="av" style={{width:26,height:26,background:'#6366f1',fontSize:11,flexShrink:0}}>PS</div>
+      <div className="typing"><div className="td"/><div className="td"/><div className="td"/></div>
+    </div>
+  );
+}
+
+// ContactList with chatCount badge (missing element added)
 function ContactList({contacts,activeId,onSelect,filter,setFilter,search,setSearch,chatCount=1336}){
   return(
     <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
@@ -92,7 +359,6 @@ function ContactList({contacts,activeId,onSelect,filter,setFilter,search,setSear
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
             <span style={{fontSize:20,fontWeight:700,color:'var(--text)',letterSpacing:-0.3}}>Live Chat</span>
-            {/* ADDED: badge with count */}
             <span style={{background:'rgba(26,86,219,0.12)',padding:'2px 8px',borderRadius:'40px',fontSize:13,fontWeight:600,color:'var(--blue)'}}>{chatCount}</span>
           </div>
           <div style={{display:'flex',gap:6}}>
@@ -110,7 +376,6 @@ function ContactList({contacts,activeId,onSelect,filter,setFilter,search,setSear
           ))}
         </div>
       </div>
-      {/* counter bar same */}
       <div style={{display:'flex',borderBottom:'1px solid rgba(255,255,255,0.3)',flexShrink:0}}>
         {[{l:'All',n:6},{l:'Open',n:4},{l:'Bot',n:2}].map(({l,n})=>(
           <div key={l} style={{flex:1,padding:'8px 0',textAlign:'center',borderRight:'1px solid rgba(255,255,255,0.3)'}}>
@@ -140,9 +405,158 @@ function ContactList({contacts,activeId,onSelect,filter,setFilter,search,setSear
   );
 }
 
-// ChatWindow, InfoPanel components remain EXACTLY same as original (not repeated here for brevity, but will be in final code)
+function ChatWindow({contact,messages,onSend,onBack,onInfo,showTyping}){
+  const [text,setText]=useState('');
+  const bottomRef=useRef(null);
+  const taRef=useRef(null);
 
-// ---------- Bottom Status Bar Component (NEW) ----------
+  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:'smooth'})},[messages,showTyping]);
+
+  function doSend(){
+    if(!text.trim())return;
+    onSend(text.trim()); setText('');
+    if(taRef.current){taRef.current.style.height='auto';}
+  }
+  function onKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSend();}}
+  function onChange(e){
+    setText(e.target.value);
+    e.target.style.height='auto';
+    e.target.style.height=Math.min(e.target.scrollHeight,120)+'px';
+  }
+
+  if(!contact) return(
+    <div style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:14}}>
+      <div style={{width:64,height:64,borderRadius:20,background:'rgba(26,86,219,0.1)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:28}}>💬</div>
+      <div style={{fontWeight:600,fontSize:16,color:'var(--text-2)'}}>Select a conversation</div>
+      <div style={{fontSize:13,color:'var(--text-3)'}}>Choose a contact from the list</div>
+    </div>
+  );
+
+  return(
+    <div style={{display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'}}>
+      <div className="chat-hdr">
+        {onBack&&<button className="icon-btn" onClick={onBack} style={{marginLeft:-4}}><i className="fa-solid fa-arrow-left" style={{fontSize:13}}/></button>}
+        <Av init={contact.init} color={contact.color} size={40} online={contact.online}/>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontWeight:700,fontSize:16,color:'var(--text)',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{contact.name}</div>
+          <div style={{fontSize:12,marginTop:1,color:contact.online?'#16a34a':'var(--text-3)'}}>
+            {contact.online?<><span style={{display:'inline-block',width:6,height:6,borderRadius:'50%',background:'#22c55e',marginRight:4,animation:'online-pulse 2.5s infinite'}}/>Online</> :`Last seen ${contact.lastSeen}`}
+          </div>
+        </div>
+        <div style={{display:'flex',gap:6}}>
+          <button className="icon-btn"><i className="fa-solid fa-phone" style={{fontSize:12}}/></button>
+          <button className="icon-btn"><i className="fa-solid fa-video" style={{fontSize:12}}/></button>
+          <button className="icon-btn" onClick={onInfo}><i className="fa-solid fa-circle-info" style={{fontSize:13}}/></button>
+          <button className="icon-btn"><i className="fa-solid fa-ellipsis-vertical" style={{fontSize:13}}/></button>
+        </div>
+      </div>
+
+      <div style={{flex:1,overflowY:'auto',padding:'16px 18px 8px',display:'flex',flexDirection:'column',gap:2,background:'rgba(255,255,255,0.12)'}}>
+        <div className="dsep">Today</div>
+        {messages.map(m=>(
+          <div key={m.id} className={`bwrap ${m.type}`}>
+            {m.type==='recv'&&<Av init={contact.init} color={contact.color} size={28}/>}
+            <div>
+              <div className={`bubble ${m.type}`} style={{whiteSpace:'pre-line'}}>{m.text}</div>
+              <div className="b-time" style={{paddingLeft:m.type==='recv'?4:0,paddingRight:m.type==='sent'?4:0}}>
+                {m.time}
+                {m.type==='sent'&&<i className="fa-solid fa-check-double" style={{fontSize:9.5,color:'#05A36C'}}/>}
+              </div>
+            </div>
+          </div>
+        ))}
+        {showTyping&&<Typing/>}
+        <div ref={bottomRef}/>
+      </div>
+
+      <div className="input-wrap">
+        <button className="icon-btn" style={{width:40,height:40}}><i className="fa-regular fa-face-smile" style={{fontSize:16}}/></button>
+        <button className="icon-btn" style={{width:40,height:40}}><i className="fa-solid fa-paperclip" style={{fontSize:13}}/></button>
+        <textarea ref={taRef} className="msg-ta" rows={1} placeholder="Type a message…" value={text} onChange={onChange} onKeyDown={onKey}/>
+        <button className="send-btn" onClick={doSend} disabled={!text.trim()}>
+          <i className="fa-solid fa-paper-plane" style={{fontSize:14,marginLeft:1}}/>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InfoPanel({contact,onClose}){
+  const [note,setNote]=useState('Follow up about enterprise plan pricing next week.');
+  if(!contact)return null;
+  return(
+    <div style={{display:'flex',flexDirection:'column',height:'100%',overflow:'hidden'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'16px 18px 12px',borderBottom:'1px solid rgba(255,255,255,0.3)',flexShrink:0}}>
+        <span style={{fontWeight:700,fontSize:20,color:'var(--text)',letterSpacing:-0.3}}>Contact Info</span>
+        {onClose&&<button className="icon-btn" style={{width:30,height:30}} onClick={onClose}><i className="fa-solid fa-xmark" style={{fontSize:13}}/></button>}
+      </div>
+      <div style={{flex:1,overflowY:'auto',padding:'16px 18px'}}>
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',gap:10,paddingBottom:18,borderBottom:'1px solid rgba(255,255,255,0.35)',marginBottom:18}}>
+          <Av init={contact.init} color={contact.color} size={56} online={contact.online}/>
+          <div style={{textAlign:'center'}}>
+            <div style={{fontWeight:700,fontSize:20,color:'var(--text)',letterSpacing:-0.3}}>{contact.name}</div>
+            <div style={{fontSize:12.5,color:'var(--text-2)',marginTop:3}}>{contact.phone}</div>
+          </div>
+          <div style={{display:'flex',gap:8}}>
+            <button className="icon-btn"><i className="fa-solid fa-phone" style={{fontSize:12}}/></button>
+            <button className="icon-btn"><i className="fa-brands fa-whatsapp" style={{fontSize:14}}/></button>
+            <button className="icon-btn"><i className="fa-solid fa-envelope" style={{fontSize:12}}/></button>
+          </div>
+        </div>
+
+        {[
+          {icon:'fa-solid fa-user-tie',label:'Agent',val:contact.agent},
+          {icon:'fa-solid fa-clock',label:'Last Seen',val:contact.lastSeen},
+          {icon:'fa-solid fa-calendar',label:'First Contact',val:'Mar 12, 2025'},
+          {icon:'fa-solid fa-message',label:'Total Messages',val:contact.msgs},
+        ].map(({icon,label,val})=>(
+          <div key={label} style={{display:'flex',gap:10,alignItems:'center',marginBottom:14}}>
+            <div style={{width:32,height:32,borderRadius:10,background:'rgba(26,86,219,0.1)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+              <i className={icon} style={{fontSize:12,color:'var(--blue)'}}/>
+            </div>
+            <div>
+              <div style={{fontSize:10.5,color:'var(--text-3)',fontWeight:600,textTransform:'uppercase',letterSpacing:.5}}>{label}</div>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--text)',marginTop:2}}>{val}</div>
+            </div>
+          </div>
+        ))}
+
+        <div style={{marginBottom:16}}>
+          <div className="slabel">Labels</div>
+          <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+            {contact.labels.map(l=><span key={l} className="tag">{l}</span>)}
+            <button style={{display:'inline-flex',alignItems:'center',gap:4,padding:'3px 11px',borderRadius:20,fontSize:12,fontWeight:500,background:'transparent',border:'1px dashed rgba(26,86,219,0.25)',color:'var(--text-3)',cursor:'pointer'}}>
+              <i className="fa-solid fa-plus" style={{fontSize:9}}/> Add
+            </button>
+          </div>
+        </div>
+
+        <div style={{marginBottom:16}}>
+          <div className="slabel">Assign Agent</div>
+          <select style={{width:'100%',padding:'9px 12px',borderRadius:12,border:'1px solid rgba(255,255,255,0.5)',font:'13.5px var(--font)',color:'var(--text)',background:'rgba(255,255,255,0.6)',outline:'none',backdropFilter:'blur(8px)'}}>
+            <option>Rahul K.</option><option>Sneha P.</option><option>Bot</option><option>Unassigned</option>
+          </select>
+        </div>
+
+        <div style={{marginBottom:16}}>
+          <div className="slabel">Notes</div>
+          <textarea className="note-ta" value={note} onChange={e=>setNote(e.target.value)} placeholder="Add a note…"/>
+        </div>
+
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          <button className="btn-grad" style={{justifyContent:'center',width:'100%'}}>
+            <i className="fa-solid fa-robot" style={{fontSize:12}}/> Assign to Bot
+          </button>
+          <button style={{display:'flex',justifyContent:'center',alignItems:'center',gap:7,width:'100%',padding:'10px',borderRadius:50,border:'1px solid rgba(239,68,68,0.25)',background:'rgba(239,68,68,0.05)',color:'#ef4444',font:'600 13.5px var(--font)',cursor:'pointer'}}>
+            <i className="fa-solid fa-ban" style={{fontSize:12}}/> Block Contact
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Bottom Status Bar Component (NEW)
 function BottomStatusBar() {
   const now = new Date();
   const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:false });
@@ -163,7 +577,7 @@ function BottomStatusBar() {
   );
 }
 
-// -------- MOBILE (with bottom bar added) --------
+/* ━━ MOBILE (with bottom bar) ━━ */
 function MobileProto(){
   const [screen,setScreen]=useState('list');
   const [contact,setContact]=useState(null);
@@ -177,17 +591,14 @@ function MobileProto(){
   });
   return(
     <div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative',fontFamily:'var(--font)'}}>
-      {/* animated blobs */}
       <div style={{position:'absolute',inset:0,background:'linear-gradient(145deg,#f8fafc,#eef2ff 60%,#f0fdf4)',overflow:'hidden',zIndex:0}}>
         <div style={{position:'absolute',width:280,height:280,borderRadius:'50%',background:'rgba(26,86,219,0.15)',filter:'blur(60px)',top:-60,left:-40,animation:'blob-drift 18s ease-in-out infinite'}}/>
         <div style={{position:'absolute',width:220,height:220,borderRadius:'50%',background:'rgba(5,163,108,0.12)',filter:'blur(50px)',bottom:-40,right:-20,animation:'blob-drift 18s ease-in-out infinite',animationDelay:'-9s'}}/>
       </div>
-      {/* status bar */}
       <div style={{height:44,background:'rgba(255,255,255,0.6)',backdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 18px',fontSize:12,fontWeight:600,color:'var(--text)',borderBottom:'1px solid rgba(255,255,255,0.4)',flexShrink:0,position:'relative',zIndex:2}}>
         <span>9:41</span>
         <div style={{display:'flex',gap:5,fontSize:13}}><i className="fa-solid fa-signal"/><i className="fa-solid fa-wifi"/><i className="fa-solid fa-battery-full"/></div>
       </div>
-      {/* main content */}
       <div style={{flex:1,overflow:'hidden',position:'relative',zIndex:1}}>
         {screen==='list'
           ?<div className="glass" style={{height:'100%',borderRadius:0,border:'none',boxShadow:'none',background:'rgba(255,255,255,0.35)'}}>
@@ -207,13 +618,12 @@ function MobileProto(){
           </>
         }
       </div>
-      {/* ADDED: bottom status bar for mobile */}
       <BottomStatusBar />
     </div>
   );
 }
 
-// -------- DESKTOP (with bottom bar added) --------
+/* ━━ DESKTOP (with bottom bar) ━━ */
 function DesktopProto(){
   const [contact,setContact]=useState(CONTACTS[0]);
   const [filter,setFilter]=useState('All');
@@ -233,15 +643,12 @@ function DesktopProto(){
       </div>
       <div style={{flex:1,overflow:'hidden',position:'relative',zIndex:1,display:'flex',flexDirection:'column'}}>
         <div style={{display:'flex',width:'100%',height:'100%',gap:12,padding:12, overflow:'hidden'}}>
-          {/* left panel */}
           <div className="glass" style={{width:290,flexShrink:0,display:'flex',flexDirection:'column',overflow:'hidden'}}>
             <ContactList contacts={filtered} activeId={contact?.id} onSelect={setContact} filter={filter} setFilter={setFilter} search={search} setSearch={setSearch} chatCount={1336} />
           </div>
-          {/* center panel */}
           <div className="glass" style={{flex:1,display:'flex',flexDirection:'column',overflow:'hidden'}}>
             <ChatWindow contact={contact} messages={convos[contact?.id]||[]} onSend={t=>send(contact.id,t)} onInfo={()=>setShowInfo(v=>!v)} showTyping={typing[contact?.id]}/>
           </div>
-          {/* right panel */}
           {showInfo&&(
             <div className="glass" style={{width:256,flexShrink:0,display:'flex',flexDirection:'column',overflow:'hidden'}}>
               <InfoPanel contact={contact}/>
@@ -249,19 +656,157 @@ function DesktopProto(){
           )}
         </div>
       </div>
-      {/* ADDED: bottom status bar for desktop */}
       <BottomStatusBar />
     </div>
   );
 }
 
-// -------- Helper components for artboards (unchanged) --------
-function MobileList(){...}  // same as original, but with chatCount prop if needed
-function MobileChat(){...}
-function MobileInfo(){...}
-function Specs(){...}
+/* ━━ STATIC SCREENS (for artboards) ━━ */
+function MobileList(){
+  const [filter,setFilter]=useState('All');const[search,setSearch]=useState('');
+  const {convos,typing,send}=useChatState();const[contact,setContact]=useState(null);const[screen,setScreen]=useState('list');const[showSheet,setShowSheet]=useState(false);
+  const filtered=CONTACTS.filter(c=>filter==='All'||(filter==='Unread'&&c.unread>0));
+  return(<div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative',fontFamily:'var(--font)'}}>
+    <div style={{position:'absolute',inset:0,background:'linear-gradient(145deg,#f8fafc,#eef2ff 60%,#f0fdf4)',overflow:'hidden'}}>
+      <div style={{position:'absolute',width:280,height:280,borderRadius:'50%',background:'rgba(26,86,219,0.15)',filter:'blur(60px)',top:-60,left:-40,animation:'blob-drift 18s ease-in-out infinite'}}/>
+      <div style={{position:'absolute',width:220,height:220,borderRadius:'50%',background:'rgba(5,163,108,0.12)',filter:'blur(50px)',bottom:-40,right:-20,animation:'blob-drift 18s ease-in-out infinite',animationDelay:'-9s'}}/>
+    </div>
+    <div style={{height:44,background:'rgba(255,255,255,0.6)',backdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 18px',fontSize:12,fontWeight:600,color:'var(--text)',borderBottom:'1px solid rgba(255,255,255,0.4)',flexShrink:0,position:'relative',zIndex:2}}>
+      <span>9:41</span><div style={{display:'flex',gap:5,fontSize:13}}><i className="fa-solid fa-signal"/><i className="fa-solid fa-wifi"/><i className="fa-solid fa-battery-full"/></div>
+    </div>
+    <div style={{flex:1,overflow:'hidden',position:'relative',zIndex:1}}>
+      {screen==='list'
+        ?<div style={{height:'100%',background:'rgba(255,255,255,0.35)',backdropFilter:'blur(20px)'}}>
+          <ContactList contacts={filtered} activeId={contact?.id} onSelect={c=>{setContact(c);setScreen('chat');}} filter={filter} setFilter={setFilter} search={search} setSearch={setSearch} chatCount={1336}/>
+        </div>
+        :<><div style={{height:'100%',display:'flex',flexDirection:'column'}}>
+          <ChatWindow contact={contact} messages={convos[contact?.id]||[]} onSend={t=>send(contact.id,t)} onBack={()=>setScreen('list')} onInfo={()=>setShowSheet(true)} showTyping={typing[contact?.id]}/>
+        </div>
+        {showSheet&&<><div className="sheet-ov" onClick={()=>setShowSheet(false)}/><div className="sheet"><div style={{width:40,height:4,borderRadius:2,background:'rgba(26,86,219,0.2)',margin:'10px auto 4px'}}/><InfoPanel contact={contact} onClose={()=>setShowSheet(false)}/></div></>}
+        </>
+      }
+    </div>
+    <BottomStatusBar />
+  </div>);
+}
 
-// App component with DesignCanvas structure (kept as original)
+function MobileChat(){
+  const c=CONTACTS[0];const{convos,typing,send}=useChatState();const[showSheet,setShowSheet]=useState(false);
+  return(<div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative',fontFamily:'var(--font)'}}>
+    <div style={{position:'absolute',inset:0,background:'linear-gradient(145deg,#f8fafc,#eef2ff 60%,#f0fdf4)',overflow:'hidden'}}>
+      <div style={{position:'absolute',width:280,height:280,borderRadius:'50%',background:'rgba(26,86,219,0.15)',filter:'blur(60px)',top:-60,left:-40,animation:'blob-drift 18s ease-in-out infinite'}}/>
+    </div>
+    <div style={{height:44,background:'rgba(255,255,255,0.6)',backdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 18px',fontSize:12,fontWeight:600,color:'var(--text)',borderBottom:'1px solid rgba(255,255,255,0.4)',flexShrink:0,position:'relative',zIndex:2}}>
+      <span>9:41</span><div style={{display:'flex',gap:5,fontSize:13}}><i className="fa-solid fa-signal"/><i className="fa-solid fa-wifi"/><i className="fa-solid fa-battery-full"/></div>
+    </div>
+    <div style={{flex:1,overflow:'hidden',position:'relative',zIndex:1}}>
+      <ChatWindow contact={c} messages={convos[c.id]||[]} onSend={t=>send(c.id,t)} onBack={()=>{}} onInfo={()=>setShowSheet(true)} showTyping={typing[c.id]}/>
+      {showSheet&&<><div className="sheet-ov" onClick={()=>setShowSheet(false)}/><div className="sheet"><div style={{width:40,height:4,borderRadius:2,background:'rgba(26,86,219,0.2)',margin:'10px auto 4px'}}/><InfoPanel contact={c} onClose={()=>setShowSheet(false)}/></div></>}
+    </div>
+    <BottomStatusBar />
+  </div>);
+}
+
+function MobileInfo(){
+  const c=CONTACTS[0];const{convos,typing,send}=useChatState();
+  return(<div style={{width:'100%',height:'100%',display:'flex',flexDirection:'column',overflow:'hidden',position:'relative',fontFamily:'var(--font)'}}>
+    <div style={{position:'absolute',inset:0,background:'linear-gradient(145deg,#f8fafc,#eef2ff 60%,#f0fdf4)',overflow:'hidden'}}>
+      <div style={{position:'absolute',width:280,height:280,borderRadius:'50%',background:'rgba(26,86,219,0.15)',filter:'blur(60px)',top:-60,left:-40}}/>
+    </div>
+    <div style={{height:44,background:'rgba(255,255,255,0.6)',backdropFilter:'blur(12px)',display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 18px',fontSize:12,fontWeight:600,color:'var(--text)',borderBottom:'1px solid rgba(255,255,255,0.4)',flexShrink:0,position:'relative',zIndex:2}}>
+      <span>9:41</span><div style={{display:'flex',gap:5,fontSize:13}}><i className="fa-solid fa-signal"/><i className="fa-solid fa-wifi"/><i className="fa-solid fa-battery-full"/></div>
+    </div>
+    <div style={{flex:1,overflow:'hidden',position:'relative',zIndex:1}}>
+      <ChatWindow contact={c} messages={convos[c.id]||[]} onSend={t=>send(c.id,t)} onBack={()=>{}} onInfo={()=>{}} showTyping={false}/>
+      <div className="sheet-ov" style={{borderRadius:'inherit'}}/>
+      <div className="sheet" style={{maxHeight:'80%'}}><div style={{width:40,height:4,borderRadius:2,background:'rgba(26,86,219,0.2)',margin:'10px auto 4px'}}/><InfoPanel contact={c}/></div>
+    </div>
+    <BottomStatusBar />
+  </div>);
+}
+
+/* ━━ SPECS (unchanged) ━━ */
+function Specs(){
+  return(
+    <div style={{width:'100%',height:'100%',padding:28,background:'linear-gradient(145deg,#f8fafc,#eef2ff)',fontFamily:'var(--font)',overflowY:'auto',position:'relative'}}>
+      <div style={{position:'absolute',inset:0,overflow:'hidden',zIndex:0}}>
+        <div style={{position:'absolute',width:400,height:400,borderRadius:'50%',background:'rgba(26,86,219,0.1)',filter:'blur(80px)',top:-100,right:-80,animation:'blob-drift 18s ease-in-out infinite'}}/>
+      </div>
+      <div style={{position:'relative',zIndex:1}}>
+        <div style={{fontSize:22,fontWeight:700,letterSpacing:-.5,marginBottom:4,color:'var(--text)'}}>Developer Handoff</div>
+        <div style={{fontSize:13.5,color:'var(--text-2)',marginBottom:24}}>MetaAdsFlow Live Chat · Matched to production dashboard</div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+          <div className="glass-strong" style={{padding:18,gridColumn:'1/-1'}}>
+            <div className="slabel">Brand Colors</div>
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12}}>
+              {[
+                ['Primary Blue','#1A56DB','Buttons, active state, links'],
+                ['Accent Green','#05A36C','Sent gradient end, ticks'],
+                ['Sent Gradient','135° #1A56DB→#05A36C','Outgoing bubbles, CTA btn'],
+                ['Background','#f8fafc → #eef2ff','Page gradient'],
+                ['Glass BG','rgba(255,255,255,0.70)','Panel backgrounds'],
+                ['Glass Border','rgba(255,255,255,0.40)','Panel borders'],
+                ['Text Primary','#0F172A','Headings, names'],
+                ['Text Muted','#64748B','Secondary text'],
+                ['Text Faint','#94a3b8','Timestamps, labels'],
+              ].map(([name,val,desc])=>(
+                <div key={name} style={{display:'flex',gap:10,alignItems:'center'}}>
+                  <div style={{width:28,height:28,borderRadius:8,background:val.includes('°')?'linear-gradient(135deg,#1A56DB,#05A36C)':val,border:'1px solid rgba(0,0,0,0.06)',flexShrink:0}}/>
+                  <div>
+                    <div style={{fontSize:11.5,fontWeight:600,color:'var(--text)'}}>{name}</div>
+                    <div style={{fontSize:10.5,fontFamily:'monospace',color:'var(--blue)'}}>{val}</div>
+                    <div style={{fontSize:10.5,color:'var(--text-3)'}}>{desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="glass-strong" style={{padding:18}}>
+            <div className="slabel">Glassmorphism</div>
+            {[
+              ['backdrop-filter','blur(20px) saturate(1.8)'],
+              ['background','rgba(255,255,255,0.70)'],
+              ['border','1px solid rgba(255,255,255,0.40)'],
+              ['border-radius','24px (panels), 16px (bubbles)'],
+              ['box-shadow','0 8px 32px rgba(0,0,0,0.05)'],
+              ['hover shadow','0 12px 40px rgba(0,0,0,0.10)'],
+              ['Blob blur','80px, animated 18s infinite'],
+            ].map(([k,v])=>(
+              <div key={k} style={{display:'flex',justifyContent:'space-between',marginBottom:9,fontSize:12,gap:10}}>
+                <span style={{color:'var(--text-2)',fontWeight:500}}>{k}</span>
+                <span style={{fontFamily:'monospace',fontSize:11,color:'var(--text)',textAlign:'right'}}>{v}</span>
+              </div>
+            ))}
+          </div>
+          <div className="glass-strong" style={{padding:18}}>
+            <div className="slabel">Typography & Animation</div>
+            {[
+              ['Inter 700 17px','Section titles'],
+              ['Inter 700 15px','Contact name, chat header'],
+              ['Inter 600 14.5px','Message body'],
+              ['Inter 500 13px','Phone, meta info'],
+              ['Inter 600 11px CAPS','Section labels'],
+              ['Inter 400 10.5px','Timestamps'],
+              ['─','─'],
+              ['msg-pop 0.28s ease','New message arrive'],
+              ['slide-r/l 0.22s','Sent / recv bubbles'],
+              ['dot-bounce 1.2s ∞','Typing indicator'],
+              ['blob-drift 18s ∞','BG blobs drift'],
+              ['hover lift 0.15s','Card translateY(-2px)'],
+            ].map(([k,v])=>(
+              <div key={k+v} style={{display:'flex',justifyContent:'space-between',marginBottom:k==='─'?6:8,fontSize:12,gap:10,opacity:k==='─'?0.3:1}}>
+                <span style={{color:'var(--text-2)',fontWeight:500,fontFamily:k.includes('Inter')||k==='─'?'monospace':undefined,fontSize:k.includes('Inter')?11:12}}>{k}</span>
+                <span style={{color:'var(--text)',textAlign:'right'}}>{v}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ━━ APP ━━ */
 function App(){
   useEffect(()=>{
     window.addEventListener('message',()=>{});
@@ -269,7 +814,7 @@ function App(){
   },[]);
   return(
     <DesignCanvas>
-      <DCSection id="mob" title="Mobile — 390 × 844" subtitle="Glass panels · Added bottom status bar & live chat badge">
+      <DCSection id="mob" title="Mobile — 390 × 844" subtitle="Glass panels · Bottom status bar & live chat badge added">
         <DCArtboard id="m1" label="01 · Contact List" width={390} height={844}><MobileList/></DCArtboard>
         <DCArtboard id="m2" label="02 · Chat Window" width={390} height={844}><MobileChat/></DCArtboard>
         <DCArtboard id="m3" label="03 · Info Sheet" width={390} height={844}><MobileInfo/></DCArtboard>
